@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title> Predict Baby Weight </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>    
+  </head>
+  <body>
+      <div class="container">
+        <div class="row my-5 pl-3">
+            <h1>Predict Baby Weight</h1>
+        </div>
+        <!-- Starts form section -->
+        <div class="form-container ">
+            <form class="form-horizontal" action = "/predict/" method="post">
+                <div class="form-group row">
+                  <label class="control-label col-sm-2" for="is_male">Is male? (Enter 1 or 0):</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="is_male" name="is_male">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-sm-2" for="mother_age">Mother's age:</label>
+                  <div class="col-sm-4">          
+                    <input type="text" class="form-control" id="mother_age" name="mother_age">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-sm-2" for="plurality">Plurality:</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="plurality" name="plurality">
+                  </div>
+                <div class="form-group row">
+                  <label class="control-label col-sm-2" for="gestation_weeks">Gestation (in weeks):</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="gestation_weeks" name="gestation_weeks">
+                  </div>
+                </div>
+                <div class="form-group row"> 
+                <label class="control-label col-sm-2" for="">&nbsp;</label>                
+                  <div class="col-sm-offset-2 col-sm-4">
+                    <button type="submit" class="btn btn-primary">Predict</button>
+                  </div>
+                </div>
+              </form>
+            <!-- Ends form section -->
+        </div>
+    </div>
+  </body>
+</html>
