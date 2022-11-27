@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request
 import numpy as np
 import joblib, sklearn
+from xgboost import XGBRegressor
 #create an instance of Flask
 app = Flask(__name__)
 @app.route('/')
@@ -36,11 +37,12 @@ def preprocessDataAndPredict(is_male, mother_age, plurality, gestation_weeks):
     #reshape array
     test_data = test_data.reshape(1,-1)
     print(test_data)
-    #open file
-    file = open("lr_model.pkl","rb")
-    #load trained model
-    trained_model = joblib.load(file)
-    #predict
+    # LR model:
+    # file = open("lr_model.pkl","rb")
+    # trained_model = joblib.load(file)
+    # # XGB model:
+    trained_model = XGBRegressor()
+    trained_model.load_model("xgb_model.json")
     prediction = trained_model.predict(test_data)
     return prediction
     pass
