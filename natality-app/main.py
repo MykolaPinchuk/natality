@@ -1,50 +1,67 @@
-#import Flask 
-from flask import Flask, render_template, request
-import numpy as np
-import joblib, sklearn
-from xgboost import XGBRegressor
-#create an instance of Flask
+import json
+import os
+import pandas as pd
+
+from flask import Flask
+from flask import jsonify
+from flask import render_template
+from flask import request
+from flask import url_for
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
+
+
+# credentials = GoogleCredentials.get_application_default()
+# api = discovery.build('ml', 'v1',
+#         credentials=credentials, cache_discovery=False)
+# project = os.environ['GOOGLE_CLOUD_PROJECT']
+# model_name = os.getenv('MODEL_NAME', 'babyweight')
+
+
 app = Flask(__name__)
-@app.route('/')
-def home():
-    return render_template('home.html')
-@app.route('/predict/', methods=['GET','POST'])
-def predict():
-    if request.method == "POST":
-        #get form data
-        # tv = request.form.get('tv')
-        # radio = request.form.get('radio')
-        # newspaper = request.form.get('newspaper')
-        is_male = request.form.get('is_male')
-        mother_age = request.form.get('mother_age')
-        plurality = request.form.get('plurality')
-        gestation_weeks = request.form.get('gestation_weeks')
-        #call preprocessDataAndPredict and pass inputs
-        try:
-            prediction = preprocessDataAndPredict(is_male, mother_age, plurality, gestation_weeks)
-            #pass prediction to template
-            return render_template('predict.html', prediction = prediction)
-        except ValueError:
-            return "Please Enter valid values"
-        pass        
-    pass
-def preprocessDataAndPredict(is_male, mother_age, plurality, gestation_weeks):
-    #put all inputs in array
-    test_data = [is_male, mother_age, plurality, gestation_weeks]
-    print(test_data)
-    #convert value data into numpy array and type float
-    test_data = np.array(test_data).astype(np.float) 
-    #reshape array
-    test_data = test_data.reshape(1,-1)
-    print(test_data)
-    # LR model:
-    # file = open("lr_model.pkl","rb")
-    # trained_model = joblib.load(file)
-    # # XGB model:
+
+
+def get_prediction(features):
+  # input_data = {'instances': [features]}
+  # parent = 'projects/%s/models/%s' % (project, model_name)
+  # prediction = api.projects().predict(body=input_data, name=parent).execute()
+
     trained_model = XGBRegressor()
     trained_model.load_model("xgb_model.json")
-    prediction = trained_model.predict(test_data)
-    return prediction
-    pass
-if __name__ == '__main__':
-    app.run(debug=True)
+    feature_df = pd.DataFrame.from_dict(features,orient='index').T
+    prediction = trained_model.predict(feature_df)
+    
+  return prediction[0]
+
+
+@app.route('/')
+def index():
+  return render_template('index.html')
+
+
+# @app.route('/form')
+# def input_form():
+#   return render_template('form.html')
+
+
+@app.route('/api/predict', methods=['POST'])
+def predict():
+  def gender2int(val):
+    genders = {'male': 1, 'female': 0}
+    return genders[val]
+
+  data = json.loads(request.data.decode())
+  mandatory_items = ['baby_gender', 'mother_age',
+                     'plurality', 'gestation_weeks']
+  for item in mandatory_items:
+    if item not in data.keys():
+      return jsonify({'result': 'Set all items.'})
+
+  features = {}
+  features['is_male'] = gender2int(data['baby_gender'])
+  features['mother_age'] = int(data['mother_age'])
+  features['plurality'] = int(data['plurality'])
+  features['gestation_weeks'] = float(data['gestation_weeks'])
+
+  prediction = get_prediction(features)
+  return jsonify({'result': '{:.2f} lbs.'.format(prediction)})
