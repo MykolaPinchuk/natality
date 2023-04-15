@@ -9,6 +9,7 @@ from flask import request
 from flask import url_for
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+from xgboost import XGBRegressor
 
 
 # credentials = GoogleCredentials.get_application_default()
