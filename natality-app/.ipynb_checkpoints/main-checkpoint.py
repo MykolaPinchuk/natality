@@ -7,8 +7,8 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import url_for
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+# from googleapiclient import discovery
+# from oauth2client.client import GoogleCredentials
 from xgboost import XGBRegressor
 
 
@@ -32,12 +32,12 @@ def get_prediction(features):
     feature_df = pd.DataFrame.from_dict(features,orient='index').T
     prediction = trained_model.predict(feature_df)
     
-  return prediction[0]
+    return prediction[0]
 
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+    return render_template('index.html')
 
 
 # @app.route('/form')
@@ -47,22 +47,22 @@ def index():
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
-  def gender2int(val):
-    genders = {'male': 1, 'female': 0}
-    return genders[val]
+    def gender2int(val):
+        genders = {'male': 1, 'female': 0}
+        return genders[val]
 
-  data = json.loads(request.data.decode())
-  mandatory_items = ['baby_gender', 'mother_age',
+    data = json.loads(request.data.decode())
+    mandatory_items = ['baby_gender', 'mother_age',
                      'plurality', 'gestation_weeks']
-  for item in mandatory_items:
-    if item not in data.keys():
-      return jsonify({'result': 'Set all items.'})
+    for item in mandatory_items:
+        if item not in data.keys():
+            return jsonify({'result': 'Set all items.'})
 
-  features = {}
-  features['is_male'] = gender2int(data['baby_gender'])
-  features['mother_age'] = int(data['mother_age'])
-  features['plurality'] = int(data['plurality'])
-  features['gestation_weeks'] = float(data['gestation_weeks'])
+    features = {}
+    features['is_male'] = gender2int(data['baby_gender'])
+    features['mother_age'] = int(data['mother_age'])
+    features['plurality'] = int(data['plurality'])
+    features['gestation_weeks'] = float(data['gestation_weeks'])
 
-  prediction = get_prediction(features)
-  return jsonify({'result': '{:.2f} lbs.'.format(prediction)})
+    prediction = get_prediction(features)
+    return jsonify({'result': '{:.2f} lbs.'.format(prediction)})
