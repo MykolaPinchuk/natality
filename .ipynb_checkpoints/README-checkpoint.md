@@ -1,4 +1,4 @@
-# This is a project to predict baby weight using few variables, known before birth date.
+# This is a project to predict baby weight using a few variables, known before birth date.
 
 I build a simple XGBoost model and deploy it on GCP via AppEngine. Model is served via Flask web-app. This repo contains everything needed to build and deploy such a model. This process will take 2-4 minutes. To do this, follow the steps below:
 
@@ -7,3 +7,7 @@ I build a simple XGBoost model and deploy it on GCP via AppEngine. Model is serv
 3. gcloud init
 4. gcloud app deploy
 5. follow the link, shown in the console after the previous command to verify that webapp works.
+
+04/15:
+will refactor this to use a frontend from https://github.com/GoogleCloudPlatform/training-data-analyst/tree/master/courses/machine_learning/deepdive2/production_ml/babyweight/application
+
