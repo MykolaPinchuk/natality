@@ -8,6 +8,5 @@ I build a simple XGBoost model and deploy it on GCP via AppEngine. Model is serv
 4. gcloud app deploy
 5. follow the link, shown in the console after the previous command to verify that webapp works.
 
-04/15:
-will refactor this to use a frontend from https://github.com/GoogleCloudPlatform/training-data-analyst/tree/master/courses/machine_learning/deepdive2/production_ml/babyweight/application
+
 
